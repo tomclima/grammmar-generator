@@ -57,8 +57,9 @@ class ArithmeticVisitor:
             return self.visit(ctx.expr())
 
 def main():
-    expression = input("Digite uma expressão aritmética: ")
-    lexer = ArithmeticLexer(InputStream(expression))
+    with open("input.txt", "r") as file:
+        program = file.read()
+    lexer = ArithmeticLexer(InputStream(program))
     stream = CommonTokenStream(lexer)
     parser = ArithmeticParser(stream)
     tree = parser.program()
