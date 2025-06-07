@@ -9,7 +9,9 @@ class ArithmeticVisitor:
             return self.visitProgram(ctx)
         elif isinstance(ctx, ArithmeticParser.StatementContext):
             return self.visitStatement(ctx)
-        if isinstance(ctx, ArithmeticParser.ExprContext):
+        elif isinstance(ctx, ArithmeticParser.AssignmentContext):
+            return self.visitAssignment(ctx)
+        elif isinstance(ctx, ArithmeticParser.ExprContext):
             return self.visitExpr(ctx)
         elif isinstance(ctx, ArithmeticParser.TermContext):
             return self.visitTerm(ctx)
@@ -17,13 +19,18 @@ class ArithmeticVisitor:
             return self.visitFactor(ctx)
 
     def visitProgram(self, ctx):
-        ... #TODO: PROGRAM LOGIC
+        for i in range(0, len(ctx.statement())):
+            self.visit(ctx.statement(i))
         
     def visitStatement(self, ctx):
-        ... ## TODO: STATEMENT LOGIC
+        assignment = self.visit(ctx.assignment())
+        if(assignment == None):
+            self.visit(ctx.expr(0))
 
     def visitAssignment(self, ctx):
-        ... ##TODO: ASIGNMENT LOGIC
+        variable = ctx.getChild(0).getText()
+        self.variables[variable] = self.visit(ctx.expr())
+        return self.variables[variable]
 
     def visitExpr(self, ctx):
         result = self.visit(ctx.term(0))
