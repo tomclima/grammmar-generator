@@ -4,6 +4,13 @@ from ArithmeticParser import ArithmeticParser
 
 class ArithmeticVisitor:
     variables = {}
+
+    def statementOutput(self, statement_type, result):
+        if (isinstance(statement_type, ArithmeticParser.AssignmentContext)):
+            print(f'{result}: {self.variables[result]}')
+        elif(isinstance(statement_type, ArithmeticParser.ExprContext)):
+            print(result)
+
     def visit(self, ctx):
         if isinstance(ctx, ArithmeticParser.ProgramContext):
             return self.visitProgram(ctx)
@@ -23,12 +30,18 @@ class ArithmeticVisitor:
             self.visit(ctx.statement(i))
         
     def visitStatement(self, ctx):
-        assignment = self.visit(ctx.assignment())
-        if(assignment == None):
+        
+        statement_type = ctx.getChild(0)
+
+        result = None
+        if isinstance(statement_type, ArithmeticParser.AssignmentContext):
+            result = self.visit(ctx.assignment())
+        elif isinstance(statement_type, ArithmeticParser.ExprContext):
             result = self.visit(ctx.expr())
-            print(f'{result}')
-        else:
-            print(f'{assignment}: {self.variables[assignment]}')
+        
+        self.statementOutput(statement_type, result)
+
+    
 
     def visitAssignment(self, ctx):
         variable = ctx.getChild(0).getText()
