@@ -25,12 +25,15 @@ class ArithmeticVisitor:
     def visitStatement(self, ctx):
         assignment = self.visit(ctx.assignment())
         if(assignment == None):
-            self.visit(ctx.expr(0))
+            result = self.visit(ctx.expr())
+            print(f'{result}')
+        else:
+            print(f'{assignment}: {self.variables[assignment]}')
 
     def visitAssignment(self, ctx):
         variable = ctx.getChild(0).getText()
         self.variables[variable] = self.visit(ctx.expr())
-        return self.variables[variable]
+        return variable
 
     def visitExpr(self, ctx):
         result = self.visit(ctx.term(0))
