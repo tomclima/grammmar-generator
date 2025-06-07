@@ -53,6 +53,8 @@ class ArithmeticVisitor:
     def visitFactor(self, ctx):
         if ctx.INT():
             return int(ctx.INT().getText())
+        elif ctx.VAR():
+            return self.variables[ctx.VAR().getText()]
         else:
             return self.visit(ctx.expr())
 
@@ -64,8 +66,8 @@ def main():
     parser = ArithmeticParser(stream)
     tree = parser.program()
     visitor = ArithmeticVisitor()
-    result = visitor.visit(tree)
-    print("Resultado:", result)
+    visitor.visit(tree)
+    
 
 if __name__ == '__main__':
     main()
