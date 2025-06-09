@@ -1,6 +1,7 @@
 from antlr4 import *
 from ArithmeticLexer import ArithmeticLexer
 from ArithmeticParser import ArithmeticParser
+from pathlib import Path
 
 class ArithmeticVisitor:
     variables = {}
@@ -75,7 +76,9 @@ class ArithmeticVisitor:
             return self.visit(ctx.expr())
 
 def main():
-    with open("input.txt", "r") as file:
+    rt = Path(__file__).resolve().parent
+    filename = rt / "input.txt"
+    with open(filename, "r") as file:
         program = file.read()
     lexer = ArithmeticLexer(InputStream(program))
     stream = CommonTokenStream(lexer)
